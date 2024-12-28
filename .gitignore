@@ -1,0 +1,92 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+*.swo
+*.bak
+*.backup
+
+# Environment
+.env
+.env.*
+.envrc
+
+# Secrets
+*.json
+*.key
+*.pem
+
+# Django Migrations
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Media files
+/media/
+
+# Database (if using SQLite)
+*.sqlite3
+db.sqlite3
+
+# Static files
+/static/
+
+# Build/Packaging
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+*.err
+*.out
+
+# IDE/Editor-specific
+.idea/
+.vscode/
+*.iml
+
+# JetBrains IDEs
+*.ipr
+*.iws
+
+# Virtual Environments
+env/
+venv/
+
+# MacOS system files
+.DS_Store
+.AppleDouble
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Coverage Files
+.coverage
+.hypothesis/
+.pytest_cache/
+
+# Testing
+*.testresult/
+Junit-result.xml
+
+# Local configuration files
+local_settings.py
+
+# Compression and packaging files
+*.gz
+*.tar
+*.zip
+*.rar
+*.7z
+
+# Node.js (for Django + Node integrations, e.g., Webpack)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json

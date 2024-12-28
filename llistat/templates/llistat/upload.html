@@ -1,0 +1,41 @@
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV</title>
+</head>
+<body>
+<h1>Seleccione un fichero .csv</h1>
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <hr>
+    <button type="submit" class="custom-button">Calcular report</button>
+</form>
+{% if dataframe %}
+    <h2>Data Preview</h2>
+    {{ dataframe|safe }}
+{% endif %}
+</body>
+
+<style>
+    .custom-button {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .custom-button:hover {
+        background-color: darkblue;
+    }
+</style>
+
+</html>
