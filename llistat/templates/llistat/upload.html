@@ -1,41 +1,44 @@
+{% extends 'llistat/base.html' %}
 {% load crispy_forms_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload CSV</title>
-</head>
-<body>
-<h1>Seleccione un fichero .csv</h1>
-{% if error %}
-    <p style="color: red;">{{ error }}</p>
-{% endif %}
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <hr>
-    <button type="submit" class="custom-button">Calcular report</button>
-</form>
-{% if dataframe %}
-    <h2>Data Preview</h2>
-    {{ dataframe|safe }}
-{% endif %}
-</body>
 
-<style>
-    .custom-button {
-        background-color: blue;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+{% block title %}Sube un fichero .csv{% endblock %}
 
-    .custom-button:hover {
-        background-color: darkblue;
-    }
-</style>
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl mb-4">Seleccione un fichero .csv</h1>
+        {% if error %}
+            <p class="text-red-500">{{ error }}</p>
+        {% endif %}
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <hr>
+            <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-700">
+                Calcular report
+            </button>
+        </form>
+        {% if dataframe %}
+            <h2 class="text-xl mt-8">Data Preview</h2>
+            <div class="overflow-auto bg-gray-100 p-4 rounded shadow">
+                {{ dataframe|safe }}
+            </div>
+        {% endif %}
+    </div>
 
-</html>
+    <style>
+        .custom-button {
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .custom-button:hover {
+            background-color: darkblue;
+        }
+    </style>
+
+
+{% endblock %}

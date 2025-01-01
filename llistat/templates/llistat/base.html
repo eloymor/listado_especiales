@@ -1,0 +1,16 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'css/stylesheet.css' %}" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
