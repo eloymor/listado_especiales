@@ -1,0 +1,18 @@
+<nav class="bg-blue-600 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Title -->
+            <h1 class="text-black text-xl font-bold">Report especiales</h1>
+
+            <!-- Logout Button -->
+            {% if user.is_authenticated %}
+            <form method="post" class="inline" action="{% url 'llistat:logout' %}?next=/">
+                {% csrf_token %}
+                <button
+                        type="submit"
+                        class="bg-red-400 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Salir
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </nav>

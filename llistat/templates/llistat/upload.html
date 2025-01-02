@@ -1,9 +1,10 @@
 {% extends 'llistat/base.html' %}
-{% load crispy_forms_tags %}
+{% load widget_tweaks %}
 
 {% block title %}Sube un fichero .csv{% endblock %}
 
 {% block content %}
+    {% include 'llistat/navigation.html' %}
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl mb-4">Seleccione un fichero .csv</h1>
         {% if error %}
@@ -11,7 +12,7 @@
         {% endif %}
         <form method="POST" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
-            {{ form|crispy }}
+            {{ form.file|attr:"class:file-input border border-gray-300 text-gray-700 rounded px-4 py-2 hover:border-blue-500 hover:bg-blue-100 cursor-pointer" }}
             <hr>
             <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-700">
                 Calcular report
@@ -24,21 +25,4 @@
             </div>
         {% endif %}
     </div>
-
-    <style>
-        .custom-button {
-            background-color: blue;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .custom-button:hover {
-            background-color: darkblue;
-        }
-    </style>
-
-
 {% endblock %}

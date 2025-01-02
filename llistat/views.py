@@ -1,5 +1,8 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import CSVFileUploadForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from .forms import CSVFileUploadForm, LoginForm
 from .models import CSVData, Report
 from .helper import convert_date_format
 from datetime import date
@@ -7,6 +10,7 @@ import pandas as pd
 import os
 
 
+@login_required(login_url='llistat:login')
 def upload_csv(request):
     df = None  # Initialize DataFrame variable
     if request.method == 'POST':
@@ -92,12 +96,6 @@ def upload_csv(request):
                         'error': f"Error saving CSV data to database: {e}"
                     })
 
-                # Display the first 5 rows in the template
-                # df_html = df.head().to_html()  # Render as HTML table
-                # return render(request, 'llistat/upload.html', {
-                #     'form': form,
-                #     'dataframe': df_html
-                # })
                 return redirect('llistat:report')
 
         else:
@@ -112,6 +110,8 @@ def upload_csv(request):
     return render(request, 'llistat/upload.html', {'form': form})
 
 
+
+@login_required(login_url='llistat:login')
 def report(request):
 
     Report.objects.all().delete()
@@ -154,7 +154,25 @@ def report(request):
     report = Report.objects.all()
     for item in report:
         item.is_past_date = (item.Fecha_Fin_Prevista and item.Fecha_Fin_Prevista < date.today())
+        item.is_delay = (item.FECHA_ENTREGA and item.FECHA_ENTREGA < date.today())
     return render(request, 'llistat/report.html', {'report': report})
 
 
-
+def user_login(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(request,
+                         username=form.cleaned_data['username'],
+                         password=form.cleaned_data['password'])
+            if user is not None:
+                login(request, user)
+                next_url = request.GET.get('next', '/')
+                return redirect(next_url)
+            else:
+                return HttpResponse("error - invalid credentials")
+    else:
+        form = LoginForm(request.POST or None)
+    return render(request,
+                  'llistat/login.html',
+                  {'form': form})

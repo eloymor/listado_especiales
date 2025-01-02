@@ -20,7 +20,7 @@
                 {% for item in items %}
                     <tbody>
                     <tr class="border-b
-  {% if item.FECHA_ENTREGA|is_past_date %}bg-yellow-400 text-red-900{% endif %}
+  {% if item.FECHA_ENTREGA|is_delay %}bg-yellow-400 text-red-900{% endif %}
   {% if item.Fecha_Fin_Prevista|is_past_date %}bg-yellow-400 text-black {% endif %}
   hover:bg-gray-100">
                         <th class="px-4 py-2">{{ forloop.counter }}</th>
