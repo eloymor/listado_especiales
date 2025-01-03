@@ -159,6 +159,7 @@ def report(request):
 
 
 def user_login(request):
+    error_message = None
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -170,9 +171,11 @@ def user_login(request):
                 next_url = request.GET.get('next', '/')
                 return redirect(next_url)
             else:
-                return HttpResponse("error - invalid credentials")
+                error_message = "Usuario o contraseña incorrecto"
+                # return HttpResponse("error - invalid credentials")
     else:
         form = LoginForm(request.POST or None)
     return render(request,
                   'llistat/login.html',
-                  {'form': form})
+                  {'form': form,
+                   'error_message': error_message})
