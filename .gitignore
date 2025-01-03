@@ -17,6 +17,7 @@ __pycache__/
 *.json
 *.key
 *.pem
+.ebextensions/
 
 # Django Migrations
 */migrations/*.py
