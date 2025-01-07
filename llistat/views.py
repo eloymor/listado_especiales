@@ -33,8 +33,16 @@ def upload_csv(request):
                     }, inplace=True)
 
                     df = df.replace({float('nan'): None}) # np.nan to None for Django ORM
-                    df["Cerrado"] = df["Cerrado"].map({"VERDADERO": True, "FALSO": False})
-                    df["PCP Lock_bit"] = df["PCP Lock_bit"].map({"VERDADERO": True, "FALSO": False})
+                    if "Cerrado" in df.columns:
+                        df["Cerrado"] = df["Cerrado"].apply(
+                            lambda x: True if str(x).strip().lower() == "true" else False if str(x).strip().lower()\
+                                == "false" else None
+                        )
+                    if "PCP Lock" in df.columns:
+                        df["PCP Lock_bit"] = df["PCP Lock_bit"].apply(
+                        lambda x: True if str(x).strip().lower() == "true" else False if str(x).strip().lower()\
+                            == "false" else None
+                        )
 
                 except Exception as e:
                     return render(request, 'llistat/upload.html', {

@@ -38,7 +38,7 @@ class CSVData(models.Model):
     QUANTITY = models.IntegerField(null=True, blank=True)
     Seccion = models.CharField(max_length=100, null=True, blank=True)
     FECHA_PREVISTA_MRP = models.DateField(null=True, blank=True)
-    ProjectDescription = models.CharField(max_length=200, null=True, blank=True)
+    ProjectDescription = models.CharField(max_length=500, null=True, blank=True)
 
     objects = models.Manager()
     without_F = WithoutFecha_F()
@@ -59,11 +59,11 @@ class CSVData(models.Model):
 
 
 class Report(models.Model):
-    Fecha_Fin_Prevista = models.DateField()
+    Fecha_Fin_Prevista = models.DateField(null=True, blank=True)
     OM = models.IntegerField()
     Peticionario = models.CharField(max_length=20)
     FECHA_ENTREGA = models.DateField()
-    FECHA_PREVISTA_MRP = models.DateField()
+    FECHA_PREVISTA_MRP = models.DateField(null=True, blank=True)
     Seccion = models.CharField(max_length=10)
 
     def __str__(self):
