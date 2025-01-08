@@ -24,7 +24,16 @@ def upload_csv(request):
 
                 # Load the file content into pandas DataFrame
                 try:
-                    df = pd.read_csv(csv_path, delimiter=';')
+                    with open(csv_path, 'r') as f:
+                        first_line = f.readline()
+                        if ";" in first_line:
+                            delimiter = ";"
+                        else:
+                            delimiter = ","
+                        f.seek(0)
+
+                    df = pd.read_csv(csv_path, delimiter=delimiter)
+
                     # Modify columns names
                     df.rename(columns={
                         "Fecha Creación": "Fecha_Creacion",
