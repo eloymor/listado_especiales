@@ -203,7 +203,7 @@ def user_login(request):
                   'llistat/login.html',
                   {'form': form,
                    'error_message': error_message})
-
+@login_required(login_url='llistat:login')
 def plot_report(request):
     report = Report.objects.all()
     data = list(report.values())
