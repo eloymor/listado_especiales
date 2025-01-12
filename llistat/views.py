@@ -4,9 +4,12 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .forms import CSVFileUploadForm, LoginForm
 from .models import CSVData, Report
-from .helper import convert_date_format
-from datetime import date
+from .helper import convert_date_format, costumers_delay
+from datetime import date, datetime
 import pandas as pd
+import json
+from plotly.utils import PlotlyJSONEncoder
+import plotly.express as px
 import os
 
 
@@ -54,6 +57,8 @@ def upload_csv(request):
                         )
 
                 except Exception as e:
+                    if os.path.exists(csv_path):
+                        os.remove(csv_path)
                     return render(request, 'llistat/upload.html', {
                         'form': form,
                         'error': f"Error reading CSV file: {e}"
@@ -108,6 +113,8 @@ def upload_csv(request):
                         os.remove(csv_path)
 
                 except Exception as e:
+                    if os.path.exists(csv_path):
+                        os.remove(csv_path)
                     return render(request, 'llistat/upload.html', {
                         'form': form,
                         'error': f"Error saving CSV data to database: {e}"
@@ -196,3 +203,57 @@ def user_login(request):
                   'llistat/login.html',
                   {'form': form,
                    'error_message': error_message})
+
+def plot_report(request):
+    report = Report.objects.all()
+    data = list(report.values())
+    df = pd.DataFrame(data)
+    df['Fecha_Fin_Prevista'] = pd.to_datetime(df['Fecha_Fin_Prevista'], yearfirst=True)
+
+    fig1 = px.pie(df['Seccion'].value_counts(),
+                 values='count',
+                 names=df['Seccion'].value_counts().index,
+                 template="plotly_white",
+                 height=400, width=400,
+                 title="% Secciones por tarea total")
+    fig_json_1 = json.dumps(fig1, cls=PlotlyJSONEncoder)
+
+    report_pet, report_pet_delay = costumers_delay(df)
+    stacked_data = pd.DataFrame({
+        "Peticionarios": report_pet.index,  # x-axis
+        "En curso": report_pet['count'],  # First series
+        "Retrasada": report_pet_delay['count']  # Second series
+    })
+    stacked_data['Peticionarios'] = stacked_data.index  # Correct column values to match original index
+
+    fig2 = px.bar(
+        stacked_data.sort_values(by='En curso', ascending=False),
+        x="Peticionarios",  # x-axis
+        y=["En curso", "Retrasada"],  # Stack these series
+        labels={
+            "Peticionarios": "Peticionarios",  # x-axis label
+            "value": "Total tareas",  # y-axis label
+            "variable": "Estado tarea"  # Label for legend
+        },
+        template="plotly_white",
+        height=400,
+        width=750,
+        title="Top 10 Peticionarios"
+    )
+    fig_json_2 = json.dumps(fig2, cls=PlotlyJSONEncoder)
+
+    today = datetime.today()
+    report_delay_seccion = df.loc[(df['Fecha_Fin_Prevista'] < today)]['Seccion'].value_counts()
+
+    fig3 = px.pie(report_delay_seccion,
+                 values='count',
+                 names=report_delay_seccion.index,
+                 template="plotly_white",
+                 height=400, width=400,
+                 title='% Sección por tareas en atraso')
+
+    fig_json_3 = json.dumps(fig3, cls=PlotlyJSONEncoder)
+
+    return render(request, 'llistat/plots.html', {'fig_json_1': fig_json_1,
+                                                                     'fig_json_2': fig_json_2,
+                                                                     'fig_json_3': fig_json_3})

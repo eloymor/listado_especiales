@@ -1,0 +1,49 @@
+{% extends 'llistat/base.html' %}
+{% load static %}
+{% block title %}Especiales - gráficos{% endblock %}
+{% block imports %}
+    <script src="{% static 'js/plotly/plotly.min.js' %}"></script>
+{% endblock %}
+{% block script %}src="https://cdn.plot.ly/plotly-2.35.2.min.js"{% endblock %}
+
+{% block content %}
+    {% include 'llistat/navigation.html' %}
+
+    <h1 class="text-2xl font-bold text-center my-4 mb-12">Report especiales - Gráficos de control</h1>
+    <!-- Create divs with Tailwind CSS classes for better styling -->
+    <div class="flex flex-row justify-center items-start space-x-8">
+        <!-- First chart container -->
+        <div id="plotly-div-1"
+             class="flex flex-row justify-between items-center w-[45%] bg-gray-100 p-4 rounded-lg shadow-md space-x-4">
+            <!-- Sub-container for the first plot -->
+            <div id="plotly-subdiv-1"></div>
+            <!-- Sub-container for the second plot -->
+            <div id="plotly-subdiv-2"></div>
+        </div>
+        <!-- Second chart container -->
+        <div id="plotly-div-2" class="w-[45%] bg-gray-100 p-4 rounded-lg shadow-md"></div>
+    </div>
+    <div class="fixed bottom-6 left-6 p-4 bg-gray-50 rounded-lg shadow-lg space-x-4">
+        <!-- First button with a link -->
+        <a href="{% url 'llistat:upload_csv' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+            Inicio
+        </a>
+        <!-- Second button with a link -->
+        <a href="{% url 'llistat:report' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+            Report
+        </a>
+    </div>
+    <!-- Plotly.js script -->
+    <script>
+        // Parse the Plotly figure JSON passed from Django
+        const plotlyFigure1 = JSON.parse('{{ fig_json_1|escapejs }}');
+        const plotlyFigure2 = JSON.parse('{{ fig_json_2|escapejs }}');
+        const plotlyFigure3 = JSON.parse('{{ fig_json_3|escapejs }}');
+        // Render the Plotly figure
+        Plotly.newPlot('plotly-subdiv-1', plotlyFigure1.data, plotlyFigure1.layout);
+        Plotly.newPlot('plotly-subdiv-2', plotlyFigure3.data, plotlyFigure3.layout);
+        Plotly.newPlot('plotly-div-2', plotlyFigure2.data, plotlyFigure2.layout);
+
+    </script>
+
+{% endblock %}
