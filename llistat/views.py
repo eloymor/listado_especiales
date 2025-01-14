@@ -254,6 +254,21 @@ def plot_report(request):
 
     fig_json_3 = json.dumps(fig3, cls=PlotlyJSONEncoder)
 
+    df['delay'] = df['Fecha_Fin_Prevista'].apply(lambda x: 'Atraso' if x < today else 'En curso')
+    agg_data = df.groupby(['Seccion', 'delay']).size().reset_index(name='count')
+
+    fig4 = px.sunburst(data_frame=agg_data,
+                       values='count',
+                       path=['Seccion', 'delay'],
+                       color='delay',
+                       color_discrete_map={'Atraso': 'red', 'En curso': 'green', 'MRP': 'blue', 'OT': 'orange'},
+                       template="plotly_white",
+                       height=400, width=750,
+                       title="Tareas por sección y estado")
+
+    fig_json_4 = json.dumps(fig4, cls=PlotlyJSONEncoder)
+
     return render(request, 'llistat/plots.html', {'fig_json_1': fig_json_1,
                                                                      'fig_json_2': fig_json_2,
-                                                                     'fig_json_3': fig_json_3})
+                                                                     'fig_json_3': fig_json_3,
+                                                                     'fig_json_4': fig_json_4})

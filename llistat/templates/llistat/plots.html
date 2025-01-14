@@ -23,7 +23,12 @@
         <!-- Second chart container -->
         <div id="plotly-div-2" class="w-[45%] bg-gray-100 p-4 rounded-lg shadow-md"></div>
     </div>
-    <div class="fixed bottom-6 left-6 p-4 bg-gray-50 rounded-lg shadow-lg space-x-4">
+
+     <div id="plotly-div-3" class="mt-8 flex justify-center bg-gray-100 p-4 rounded-lg shadow-md">
+        <div id="plotly-subdiv-3"></div>
+    </div>
+
+    <div class="my-6 p-4 space-x-4">
         <!-- First button with a link -->
         <a href="{% url 'llistat:upload_csv' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition">
             Inicio
@@ -39,10 +44,12 @@
         const plotlyFigure1 = JSON.parse('{{ fig_json_1|escapejs }}');
         const plotlyFigure2 = JSON.parse('{{ fig_json_2|escapejs }}');
         const plotlyFigure3 = JSON.parse('{{ fig_json_3|escapejs }}');
+        const plotlyFigure4 = JSON.parse('{{ fig_json_4|escapejs }}');
         // Render the Plotly figure
         Plotly.newPlot('plotly-subdiv-1', plotlyFigure1.data, plotlyFigure1.layout);
         Plotly.newPlot('plotly-subdiv-2', plotlyFigure3.data, plotlyFigure3.layout);
         Plotly.newPlot('plotly-div-2', plotlyFigure2.data, plotlyFigure2.layout);
+        Plotly.newPlot('plotly-subdiv-3', plotlyFigure4.data, plotlyFigure4.layout);
 
     </script>
 
