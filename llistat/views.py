@@ -57,19 +57,27 @@ def upload_csv(request):
                     }, inplace=True)
 
                     df = df.replace({float('nan'): None}) # np.nan to None for Django ORM
-                    if "Cerrado" in df.columns:
-                        df["Cerrado"] = df["Cerrado"].apply(
-                            lambda x: True if str(x).strip().lower() == "true" else False if str(x).strip().lower()\
-                                == "false" else None
-                        )
-                    if "PCP Lock" in df.columns:
-                        df["PCP Lock_bit"] = df["PCP Lock_bit"].apply(
-                        lambda x: True if str(x).strip().lower() == "true" else False if str(x).strip().lower()\
-                            == "false" else None
-                        )
+                    # if "Cerrado" in df.columns:
+                    #     df["Cerrado"] = df["Cerrado"].apply(
+                    #         lambda x: True if str(x).strip().lower() == "true" else False if str(x).strip().lower()\
+                    #             == "false" else None
+                    #     )
+                    # if "PCP Lock_bit" in df.columns:
+                    #     df["PCP Lock_bit"] = df["PCP Lock_bit"].apply(
+                    #     lambda x: True if str(x).strip().lower() == "true" else False if str(x).strip().lower()\
+                    #         == "false" else None
+                    #     )
 
                     if "Usuario" in df.columns:
                         df = df.drop(columns=["Usuario"])
+                    if "Cerrado" in df.columns:
+                        df = df.drop(columns=["Cerrado"])
+                    if "PCP Lock" in df.columns:
+                        df = df.drop(columns=["PCP Lock"])
+                    if "PCP Lock_bit" in df.columns:
+                        df = df.drop(columns=["PCP Lock_bit"])
+                    if "Unlocking Remarks" in df.columns:
+                        df = df.drop(columns=["Unlocking Remarks"])
 
                 except Exception as e:
                     if os.path.exists(csv_path):
@@ -100,15 +108,11 @@ def upload_csv(request):
                             Peticionario = row["Peticionario"],
                             Factibilidad = row["Factibilidad"],
                             Plazo = row["Plazo"],
-                            Cerrado = row["Cerrado"],
                             Fecha_Cierre = row["Fecha_Cierre"],
                             Tarea = row["Tarea"],
                             FECHA_I = row["FECHA_I"],
                             Fecha_Fin_Prevista = row["Fecha_Fin_Prevista"],
                             FECHA_F = row["FECHA_F"],
-                            PCP_Lock_bit = row["PCP Lock_bit"],
-                            PCP_Lock = row["PCP Lock"],
-                            Unlocking_Remarks = row["Unlocking Remarks"],
                             NUM_PEDIDO = row["NUM_PEDIDO"],
                             Fecha_Cliente = row["Fecha_Cliente"],
                             FECHA_ENTREGA = row["FECHA_ENTREGA"],
